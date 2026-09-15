@@ -2,249 +2,209 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WaitLess</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>WaitLess — V2</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f4f5f7;
+  color:#17191d;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f5f6f8;
-  color: #17191d;
+.app{
+  max-width:430px;
+  margin:auto;
+  min-height:100vh;
+  background:#fff;
+  position:relative;
+  overflow:hidden;
 }
 
-.app {
-  max-width: 430px;
-  margin: auto;
-  min-height: 100vh;
-  background: white;
-  position: relative;
-  overflow: hidden;
+header{
+  position:absolute;
+  z-index:1000;
+  top:12px;
+  left:14px;
+  right:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-header {
-  padding: 22px 20px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.logo{
+  background:#fff;
+  padding:9px 13px;
+  border-radius:15px;
+  box-shadow:0 4px 18px #0002;
+  font-size:21px;
+  font-weight:800;
 }
 
-.logo {
-  font-size: 25px;
-  font-weight: 800;
+.logo span{
+  font-weight:400;
 }
 
-.logo span {
-  font-weight: 400;
+.icon{
+  width:42px;
+  height:42px;
+  border:0;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 4px 18px #0002;
+  font-size:19px;
 }
 
-.search {
-  margin: 8px 16px;
-  padding: 13px 16px;
-  border: 1px solid #ddd;
-  border-radius: 16px;
-  color: #777;
+#map{
+  height:470px;
+  width:100%;
 }
 
-.map {
-  height: 360px;
-  margin: 8px 12px;
-  border-radius: 24px;
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(
-      30deg,
-      transparent 46%,
-      #fff 47%,
-      #fff 50%,
-      transparent 51%
-    ),
-    linear-gradient(
-      -25deg,
-      transparent 48%,
-      #fff 49%,
-      #fff 51%,
-      transparent 52%
-    ),
-    #dfe5dc;
+.search{
+  position:absolute;
+  z-index:1000;
+  top:70px;
+  left:18px;
+  right:18px;
+  background:#fff;
+  padding:13px 15px;
+  border-radius:16px;
+  box-shadow:0 4px 18px #0002;
+  color:#777;
 }
 
-.road {
-  position: absolute;
-  background: white;
-  opacity: .85;
-  height: 12px;
-  transform: rotate(-18deg);
-  width: 500px;
-  top: 130px;
-  left: -40px;
+.locate{
+  position:absolute;
+  z-index:1000;
+  right:18px;
+  bottom:205px;
+  width:45px;
+  height:45px;
+  border:0;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 4px 18px #0002;
+  font-size:19px;
 }
 
-.road2 {
-  top: 260px;
-  transform: rotate(10deg);
+.panel{
+  position:relative;
+  margin-top:-18px;
+  background:#fff;
+  border-radius:24px 24px 0 0;
+  padding:18px 18px 90px;
+  z-index:900;
 }
 
-.pin {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  border-radius: 50% 50% 50% 0;
-  transform: rotate(-45deg);
-  display: grid;
-  place-items: center;
-  box-shadow: 0 2px 8px #0003;
+.handle{
+  width:38px;
+  height:4px;
+  background:#ddd;
+  border-radius:5px;
+  margin:0 auto 15px;
 }
 
-.pin i {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: white;
+h2{
+  margin:0 0 13px;
+  font-size:19px;
 }
 
-.green {
-  background: #24b36b;
+.filters{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin-bottom:8px;
 }
 
-.orange {
-  background: #f59e0b;
+.filter{
+  white-space:nowrap;
+  border:1px solid #ddd;
+  background:#fff;
+  border-radius:20px;
+  padding:8px 12px;
+  font-size:13px;
 }
 
-.red {
-  background: #ef4444;
+.filter.active{
+  background:#17191d;
+  color:#fff;
+  border-color:#17191d;
 }
 
-.p1 {
-  left: 24%;
-  top: 24%;
+.place{
+  display:flex;
+  gap:12px;
+  padding:13px 0;
+  border-bottom:1px solid #eee;
 }
 
-.p2 {
-  left: 62%;
-  top: 35%;
+.dot{
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  margin-top:5px;
+  flex:none;
 }
 
-.p3 {
-  left: 42%;
-  top: 66%;
+.green{background:#22b36b}
+.orange{background:#f59e0b}
+.red{background:#ef4444}
+
+.place b{
+  font-size:15px;
 }
 
-.p4 {
-  left: 76%;
-  top: 70%;
+.place small{
+  display:block;
+  color:#70747a;
+  margin-top:4px;
 }
 
-.card {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 14px;
-  background: white;
-  border-radius: 20px;
-  padding: 15px;
-  box-shadow: 0 5px 25px #0002;
+.report{
+  margin-top:16px;
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:15px;
+  background:#17191d;
+  color:#fff;
+  font-weight:750;
+  font-size:14px;
 }
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+nav{
+  position:fixed;
+  z-index:1100;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  max-width:430px;
+  width:100%;
+  background:#fff;
+  border-top:1px solid #eee;
+  display:flex;
+  justify-content:space-around;
+  padding:11px 0 14px;
 }
 
-.title {
-  font-weight: 750;
-  font-size: 17px;
+nav div{
+  text-align:center;
+  font-size:11px;
+  color:#777;
 }
 
-.badge {
-  padding: 6px 10px;
-  border-radius: 99px;
-  background: #fff1d6;
-  color: #a76200;
-  font-size: 12px;
-  font-weight: 700;
+.active{
+  color:#17191d!important;
+  font-weight:800;
 }
 
-.meta {
-  color: #6d7178;
-  font-size: 13px;
-  margin: 7px 0 12px;
-}
-
-button {
-  border: 0;
-  border-radius: 14px;
-  padding: 12px 15px;
-  font-weight: 700;
-  font-size: 14px;
-  background: #17191d;
-  color: white;
-  width: 100%;
-}
-
-section {
-  padding: 8px 20px 95px;
-}
-
-.section-title {
-  font-size: 19px;
-  font-weight: 800;
-  margin: 10px 0;
-}
-
-.place {
-  display: flex;
-  gap: 12px;
-  padding: 14px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  margin-top: 5px;
-}
-
-.place b {
-  font-size: 15px;
-}
-
-.place small {
-  display: block;
-  color: #74777d;
-  margin-top: 4px;
-}
-
-nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 430px;
-  width: 100%;
-  background: white;
-  border-top: 1px solid #eee;
-  display: flex;
-  justify-content: space-around;
-  padding: 12px 0 14px;
-}
-
-nav div {
-  text-align: center;
-  font-size: 12px;
-  color: #777;
-}
-
-nav .active {
-  color: #17191d;
-  font-weight: 800;
+.leaflet-control-attribution{
+  font-size:8px;
 }
 </style>
 </head>
@@ -254,129 +214,300 @@ nav .active {
 <div class="app">
 
 <header>
-  <div class="logo">
-    Wait<span>Less</span>
-  </div>
-  <div>⚙️</div>
+
+<div class="logo">
+Wait<span>Less</span>
+</div>
+
+<button class="icon" onclick="locate()">
+📍
+</button>
+
 </header>
 
 <div class="search">
-  🔎 &nbsp; Rechercher un lieu...
+🔎 &nbsp; Rechercher un lieu...
 </div>
 
-<div class="map">
+<div id="map"></div>
 
-  <div class="road"></div>
-  <div class="road road2"></div>
+<button class="locate" onclick="locate()">
+⌖
+</button>
 
-  <div class="pin green p1">
-    <i></i>
-  </div>
+<div class="panel">
 
-  <div class="pin orange p2">
-    <i></i>
-  </div>
+<div class="handle"></div>
 
-  <div class="pin red p3">
-    <i></i>
-  </div>
+<h2>
+À proximité
+</h2>
 
-  <div class="pin green p4">
-    <i></i>
-  </div>
+<div class="filters">
 
-  <div class="card">
+<button class="filter active">
+Tous
+</button>
 
-    <div class="row">
-      <div class="title">
-        Fitness Park
-      </div>
+<button class="filter">
+🍔 Restaurants
+</button>
 
-      <div class="badge">
-        Affluence moyenne
-      </div>
-    </div>
+<button class="filter">
+🏋️ Sport
+</button>
 
-    <div class="meta">
-      👥 ~40 personnes
-      &nbsp; • &nbsp;
-      ⏱️ 8 min d'attente
-    </div>
-
-    <button onclick="signaler()">
-      Signaler l'affluence
-    </button>
-
-  </div>
+<button class="filter">
+🛒 Magasins
+</button>
 
 </div>
 
-<section>
+<div id="places"></div>
 
-  <div class="section-title">
-    À proximité
-  </div>
+<button class="report" onclick="report()">
++ Signaler l'affluence
+</button>
 
-  <div class="place">
-    <div class="dot green"></div>
-
-    <div>
-      <b>Carrefour City</b>
-      <small>
-        Faible affluence • ~2 min
-      </small>
-    </div>
-  </div>
-
-  <div class="place">
-    <div class="dot orange"></div>
-
-    <div>
-      <b>McDonald's</b>
-      <small>
-        Affluence moyenne • ~7 min
-      </small>
-    </div>
-  </div>
-
-  <div class="place">
-    <div class="dot red"></div>
-
-    <div>
-      <b>La Poste</b>
-      <small>
-        Forte affluence • ~18 min
-      </small>
-    </div>
-  </div>
-
-</section>
+</div>
 
 <nav>
 
-  <div class="active">
-    🗺️<br>
-    Carte
-  </div>
+<div class="active">
+🗺️
+<br>
+Carte
+</div>
 
-  <div>
-    🔔<br>
-    Alertes
-  </div>
+<div>
+🔔
+<br>
+Alertes
+</div>
 
-  <div>
-    👤<br>
-    Profil
-  </div>
+<div>
+👤
+<br>
+Profil
+</div>
 
 </nav>
 
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
 
-function signaler() {
-  alert("Merci ! Ton signalement a été enregistré.");
+const places = [
+
+{
+name:"Fitness Park",
+lat:48.9101,
+lng:2.2957,
+status:"Moyenne",
+wait:8,
+people:40,
+c:"orange"
+},
+
+{
+name:"Carrefour City",
+lat:48.9090,
+lng:2.3000,
+status:"Faible",
+wait:2,
+people:12,
+c:"green"
+},
+
+{
+name:"McDonald's",
+lat:48.9120,
+lng:2.3015,
+status:"Moyenne",
+wait:7,
+people:28,
+c:"orange"
+},
+
+{
+name:"La Poste",
+lat:48.9065,
+lng:2.2970,
+status:"Forte",
+wait:18,
+people:55,
+c:"red"
+}
+
+];
+
+
+const map = L.map('map',{
+zoomControl:false
+}).setView(
+[48.909,2.298],
+15
+);
+
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+maxZoom:19,
+attribution:'© OpenStreetMap'
+}
+).addTo(map);
+
+
+const colors = {
+green:"#22b36b",
+orange:"#f59e0b",
+red:"#ef4444"
+};
+
+
+places.forEach(p => {
+
+const icon = L.divIcon({
+
+className:"",
+
+html:`
+
+<div style="
+width:25px;
+height:25px;
+border-radius:50% 50% 50% 0;
+transform:rotate(-45deg);
+background:${colors[p.c]};
+box-shadow:0 2px 8px #0004;
+display:grid;
+place-items:center
+">
+
+<i style="
+width:9px;
+height:9px;
+border-radius:50%;
+background:white
+"></i>
+
+</div>
+
+`,
+
+iconSize:[25,25],
+iconAnchor:[12,24]
+
+});
+
+
+L.marker(
+[p.lat,p.lng],
+{icon}
+)
+.addTo(map)
+.bindPopup(`
+
+<b>${p.name}</b>
+<br>
+⏱️ ${p.wait} min
+•
+👥 ~${p.people} personnes
+
+`);
+
+});
+
+
+function render(){
+
+document.getElementById("places").innerHTML = places.map(p => `
+
+<div class="place">
+
+<div class="dot ${p.c}"></div>
+
+<div>
+
+<b>${p.name}</b>
+
+<small>
+${p.status} affluence
+•
+~${p.wait} min d'attente
+</small>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+render();
+
+
+function report(){
+
+alert(
+"Merci ! Ton signalement a été enregistré."
+);
+
+}
+
+
+function locate(){
+
+if(!navigator.geolocation){
+
+alert(
+"La géolocalisation n'est pas disponible."
+);
+
+return;
+
+}
+
+navigator.geolocation.getCurrentPosition(
+
+pos => {
+
+const latitude = pos.coords.latitude;
+const longitude = pos.coords.longitude;
+
+map.setView(
+[latitude,longitude],
+16
+);
+
+L.circleMarker(
+[latitude,longitude],
+{
+radius:8
+}
+)
+.addTo(map)
+.bindPopup(
+"Vous êtes ici"
+)
+.openPopup();
+
+},
+
+() => {
+
+alert(
+"Impossible d'obtenir votre position. Vérifie l'autorisation de localisation dans Safari."
+);
+
+}
+
+);
+
 }
 
 </script>
