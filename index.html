@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WaitLess</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f6f8;
+  color: #17191d;
+}
+
+.app {
+  max-width: 430px;
+  margin: auto;
+  min-height: 100vh;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+
+header {
+  padding: 22px 20px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.logo span {
+  font-weight: 400;
+}
+
+.search {
+  margin: 8px 16px;
+  padding: 13px 16px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  color: #777;
+}
+
+.map {
+  height: 360px;
+  margin: 8px 12px;
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      30deg,
+      transparent 46%,
+      #fff 47%,
+      #fff 50%,
+      transparent 51%
+    ),
+    linear-gradient(
+      -25deg,
+      transparent 48%,
+      #fff 49%,
+      #fff 51%,
+      transparent 52%
+    ),
+    #dfe5dc;
+}
+
+.road {
+  position: absolute;
+  background: white;
+  opacity: .85;
+  height: 12px;
+  transform: rotate(-18deg);
+  width: 500px;
+  top: 130px;
+  left: -40px;
+}
+
+.road2 {
+  top: 260px;
+  transform: rotate(10deg);
+}
+
+.pin {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 8px #0003;
+}
+
+.pin i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: white;
+}
+
+.green {
+  background: #24b36b;
+}
+
+.orange {
+  background: #f59e0b;
+}
+
+.red {
+  background: #ef4444;
+}
+
+.p1 {
+  left: 24%;
+  top: 24%;
+}
+
+.p2 {
+  left: 62%;
+  top: 35%;
+}
+
+.p3 {
+  left: 42%;
+  top: 66%;
+}
+
+.p4 {
+  left: 76%;
+  top: 70%;
+}
+
+.card {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  background: white;
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 5px 25px #0002;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-weight: 750;
+  font-size: 17px;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 99px;
+  background: #fff1d6;
+  color: #a76200;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.meta {
+  color: #6d7178;
+  font-size: 13px;
+  margin: 7px 0 12px;
+}
+
+button {
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 15px;
+  font-weight: 700;
+  font-size: 14px;
+  background: #17191d;
+  color: white;
+  width: 100%;
+}
+
+section {
+  padding: 8px 20px 95px;
+}
+
+.section-title {
+  font-size: 19px;
+  font-weight: 800;
+  margin: 10px 0;
+}
+
+.place {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 5px;
+}
+
+.place b {
+  font-size: 15px;
+}
+
+.place small {
+  display: block;
+  color: #74777d;
+  margin-top: 4px;
+}
+
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 430px;
+  width: 100%;
+  background: white;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0 14px;
+}
+
+nav div {
+  text-align: center;
+  font-size: 12px;
+  color: #777;
+}
+
+nav .active {
+  color: #17191d;
+  font-weight: 800;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+  <div class="logo">
+    Wait<span>Less</span>
+  </div>
+  <div>⚙️</div>
+</header>
+
+<div class="search">
+  🔎 &nbsp; Rechercher un lieu...
+</div>
+
+<div class="map">
+
+  <div class="road"></div>
+  <div class="road road2"></div>
+
+  <div class="pin green p1">
+    <i></i>
+  </div>
+
+  <div class="pin orange p2">
+    <i></i>
+  </div>
+
+  <div class="pin red p3">
+    <i></i>
+  </div>
+
+  <div class="pin green p4">
+    <i></i>
+  </div>
+
+  <div class="card">
+
+    <div class="row">
+      <div class="title">
+        Fitness Park
+      </div>
+
+      <div class="badge">
+        Affluence moyenne
+      </div>
+    </div>
+
+    <div class="meta">
+      👥 ~40 personnes
+      &nbsp; • &nbsp;
+      ⏱️ 8 min d'attente
+    </div>
+
+    <button onclick="signaler()">
+      Signaler l'affluence
+    </button>
+
+  </div>
+
+</div>
+
+<section>
+
+  <div class="section-title">
+    À proximité
+  </div>
+
+  <div class="place">
+    <div class="dot green"></div>
+
+    <div>
+      <b>Carrefour City</b>
+      <small>
+        Faible affluence • ~2 min
+      </small>
+    </div>
+  </div>
+
+  <div class="place">
+    <div class="dot orange"></div>
+
+    <div>
+      <b>McDonald's</b>
+      <small>
+        Affluence moyenne • ~7 min
+      </small>
+    </div>
+  </div>
+
+  <div class="place">
+    <div class="dot red"></div>
+
+    <div>
+      <b>La Poste</b>
+      <small>
+        Forte affluence • ~18 min
+      </small>
+    </div>
+  </div>
+
+</section>
+
+<nav>
+
+  <div class="active">
+    🗺️<br>
+    Carte
+  </div>
+
+  <div>
+    🔔<br>
+    Alertes
+  </div>
+
+  <div>
+    👤<br>
+    Profil
+  </div>
+
+</nav>
+
+</div>
+
+<script>
+
+function signaler() {
+  alert("Merci ! Ton signalement a été enregistré.");
+}
+
+</script>
+
+</body>
+</html>
