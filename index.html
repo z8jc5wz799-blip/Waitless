@@ -458,7 +458,57 @@ alert(
 );
 
 }
+const SUPABASE_URL = "https://sfqytvnqelxuctpwqevg.supabase.co";
+const SUPABASE_KEY = "Sb_publié_tURU49nkkrkG1cj-SkdQfg_xELYi_4X";
 
+function report(){
+
+  const affluence = prompt(
+    "Quelle est l'affluence ?\n\n🟢 Faible\n🟠 Moyenne\n🔴 Forte"
+  );
+
+  if(!affluence) return;
+
+  const attente = prompt(
+    "Combien de minutes d'attente environ ?"
+  );
+
+  if(attente === null || attente === "") return;
+
+  const lieu = prompt(
+    "Quel est le lieu ?\nExemple : Fitness Park"
+  );
+
+  if(!lieu) return;
+
+  fetch(`${SUPABASE_URL}/rest/v1/signalements`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify({
+      Lieu: lieu,
+      affluence: affluence,
+      attente: Number(attente)
+    })
+  })
+  .then(async response => {
+
+    if(!response.ok){
+      const error = await response.text();
+      throw new Error(error);
+    }
+
+    alert("✅ Signalement enregistré !");
+  })
+  .catch(error => {
+    console.error(error);
+    alert("❌ Impossible d'enregistrer le signalement.");
+  });
+}
 
 function locate(){
 
